@@ -1,0 +1,20 @@
+{
+  "provider": "gemini",
+  "model": "gemini-2.5-flash",
+  "language": "ru",
+  "temperature": 0.7,
+  "max_tokens": 4000,
+  "project": "AI Content Publisher Pro",
+  "output": {
+    "markdown": true,
+    "html": true,
+    "docx": true,
+    "pdf": true
+  },
+  "seo": {
+    "keywords": true,
+    "faq": true,
+    "meta": true,
+    "schema": true
+  }
+}

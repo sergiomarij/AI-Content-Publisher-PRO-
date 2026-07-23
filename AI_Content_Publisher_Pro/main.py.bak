@@ -1,0 +1,341 @@
+from rich.console import Console
+
+from app.ui import banner, show_menu
+
+from app.core.config import settings
+from app.core.logger import logger
+from app.core.session import Base, engine
+from app.publishers.wordpress.publisher import WordPressPublisher
+from app.projects.manager import ProjectManager
+from app.projects.current import CurrentProject
+from app.projects.menu import menu as project_menu
+
+from app.generators.seo import SEOGenerator
+from app.core.article_manager import ArticleManager
+from app.projects.project_manager import ProjectManager
+from app.history.history_manager import HistoryManager
+from app.publishers.wordpress.menu import menu as wp_menu
+from app.publishers.wordpress.config import WordPressConfig
+from app.publishers.wordpress.client import WordPressClient
+from app.ui.dashboard import Dashboard
+pm = ProjectManager()
+current = CurrentProject()
+
+console = Console()
+dashboard = Dashboard()
+
+
+def main():
+
+    Base.metadata.create_all(engine)
+
+    banner(console)
+    dashboard.show(console)
+
+    logger.info("Проект запущен")
+
+    seo = SEOGenerator()
+    articles = ArticleManager()
+    projects = ProjectManager()
+    history = HistoryManager()
+    wp = WordPressConfig()
+    publisher = WordPressPublisher()
+
+    console.print(f"[green]Provider:[/green] {settings.provider}")
+    console.print(f"[green]Model:[/green] {settings.model}")
+
+    while True:
+
+        show_menu()
+
+        choice = input("Выберите пункт: ")
+
+        if choice == "0":
+            break
+
+        elif choice == "1":
+
+            topic = input("\nВведите тему статьи: ")
+
+            console.print("\n[cyan]Генерируем статью...[/cyan]\n")
+
+            try:
+
+                article = seo.generate(topic)
+
+                article_id, folder = articles.create_article(topic)
+
+                articles.save_markdown(folder, article)
+                articles.save_html(folder, article)
+                articles.save_text(folder, article)
+
+                console.print(f"\n[green]Статья сохранена[/green] ({article_id})")
+
+            except Exception as e:
+
+                console.print(f"[red]{e}[/red]")
+
+        elif choice == "2":
+
+          while True:
+
+            wp_menu()
+
+            cmd = input("> ")
+
+            if cmd == "0":
+             break
+
+            elif cmd == "1":
+
+              url = input("URL сайта: ")
+ 
+              login = input("Логин: ")
+
+              password = input("Application Password: ")
+
+            wp.save(url, login, password)
+
+            console.print("[green]Настройки сохранены[/green]")
+
+        elif cmd == "2":
+
+            client = WordPressClient(
+                cfg["url"],
+                cfg["username"],
+                cfg["application_password"]
+            )
+
+            if client.test():
+
+                console.print("[green]Соединение успешно[/green]")
+
+            else:
+
+                console.print("[red]Ошибка подключения[/red]")
+
+        elif cmd == "3":
+
+            console.print("[yellow]Черновик скоро будет работать[/yellow]")
+
+        elif cmd == "4":
+
+    ok, msg = publisher.publish_last()
+
+    if ok:
+
+        console.print(f"[green]{msg}[/green]")
+
+    else:
+
+        console.print(f"[red]{msg}[/red]")
+
+            console.print("[yellow]Публикация скоро будет работать[/yellow]")
+
+        elif cmd == "5":
+
+            console.print("[yellow]Категории скоро будут[/yellow]")
+
+        elif cmd == "6":
+
+            console.print("[yellow]Теги скоро будут[/yellow]")
+
+        elif cmd == "7":
+
+            console.print("[yellow]Медиа скоро будут[/yellow]")
+
+    while True:
+
+        wp_menu()
+
+        cmd = input("> ")
+
+        if cmd == "0":
+            break
+
+        elif cmd == "1":
+
+            url = input("URL сайта: ")
+
+            login = input("Логин: ")
+
+            password = input("Application Password: ")
+
+            wp.save(url, login, password)
+
+            console.print("[green]Настройки сохранены[/green]")
+
+        elif cmd == "2":
+
+            cfg = wp.load()
+
+            client = WordPressClient(
+                cfg["url"],
+                cfg["username"],
+                cfg["application_password"]
+            )
+
+            if client.test():
+
+                console.print("[green]Соединение успешно[/green]")
+
+            else:
+
+                console.print("[red]Ошибка подключения[/red]")
+
+        elif cmd == "3":
+
+            console.print("[yellow]Черновик скоро будет работать[/yellow]")
+
+        elif cmd == "4":
+
+            console.print("[yellow]Публикация скоро будет работать[/yellow]")
+
+        elif cmd == "5":
+
+            console.print("[yellow]Категории скоро будут[/yellow]")
+
+        elif cmd == "6":
+
+            console.print("[yellow]Теги скоро будут[/yellow]")
+
+        elif cmd == "7":
+
+            console.print("[yellow]Медиа скоро будут[/yellow]")
+
+            console.print("[yellow]WordPress модуль пока не подключен[/yellow]")
+
+        elif choice == "3":
+
+            console.print("[yellow]Telegram модуль пока не подключен[/yellow]")
+
+        elif choice == "4":
+
+            console.print("[yellow]DTF модуль пока не подключен[/yellow]")
+
+        elif choice == "5":
+
+            console.print("[yellow]VC.ru модуль пока не подключен[/yellow]")
+
+        elif choice == "6":
+
+            console.print("[yellow]Medium модуль пока не подключен[/yellow]")
+
+        elif choice == "7":
+
+            console.print("[yellow]Teletype модуль пока не подключен[/yellow]")
+
+        elif choice == "8":
+
+            history.show(console)
+
+        elif choice == "9":
+
+            console.print("[cyan]Экспорт скоро появится[/cyan]")
+
+        elif choice == "10":
+
+    while True:
+
+        project_menu(current.get())
+
+        cmd = input("> ")
+
+        if cmd == "0":
+            break
+
+        elif cmd == "1":
+
+            projects = pm.list()
+
+            if not projects:
+                console.print("[yellow]Нет проектов[/yellow]")
+                continue
+
+            console.print()
+
+            for i, p in enumerate(projects, 1):
+                console.print(f"{i}. {p}")
+
+            n = input("\nВыберите проект: ")
+
+            try:
+                current.set(projects[int(n)-1])
+                console.print("[green]Проект выбран[/green]")
+            except:
+                console.print("[red]Ошибка выбора[/red]")
+
+        elif cmd == "2":
+
+            name = input("Название проекта: ").strip()
+
+            if not name:
+                continue
+
+            if pm.create(name):
+                console.print("[green]Проект создан[/green]")
+            else:
+                console.print("[red]Такой проект уже существует[/red]")
+
+        elif cmd == "3":
+
+            old = current.get()
+
+            if not old:
+                console.print("[yellow]Нет активного проекта[/yellow]")
+                continue
+
+            new = input("Новое название: ").strip()
+
+            if new:
+                pm.rename(old, new)
+                current.set(new)
+                console.print("[green]Проект переименован[/green]")
+
+        elif cmd == "4":
+
+            old = current.get()
+
+            if not old:
+                console.print("[yellow]Нет активного проекта[/yellow]")
+                continue
+
+            ans = input(f"Удалить '{old}'? (y/n): ")
+
+            if ans.lower() == "y":
+                pm.delete(old)
+                console.print("[green]Проект удалён[/green]")
+
+            plist = projects.projects()
+
+            console.print()
+
+            if len(plist) == 0:
+                console.print("[yellow]Нет проектов[/yellow]")
+            else:
+                console.print("[bold cyan]Проекты[/bold cyan]")
+                for i, p in enumerate(plist, 1):
+                    console.print(f"{i}. {p}")
+
+            console.print()
+            console.print("N - Новый проект")
+            console.print("Enter - назад")
+
+            cmd = input("> ")
+
+            if cmd.lower() == "n":
+
+                name = input("Название проекта: ")
+
+                if projects.create(name):
+                    console.print("[green]Проект создан[/green]")
+                else:
+                    console.print("[red]Проект уже существует[/red]")
+
+        elif choice == "11":
+
+            console.print("[cyan]Настройки скоро появятся[/cyan]")
+
+
+if __name__ == "__main__":
+    main()
