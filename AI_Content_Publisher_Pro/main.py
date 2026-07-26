@@ -23,6 +23,7 @@ from app.publishers.wordpress.menu import menu as wp_menu
 from app.publishers.wordpress.config import WordPressConfig
 from app.publishers.wordpress.client import WordPressClient
 from app.publishers.wordpress.publisher import WordPressPublisher
+from app.publishers.blogger.publisher import BloggerPublisher
 
 console = Console()
 dashboard = Dashboard()
