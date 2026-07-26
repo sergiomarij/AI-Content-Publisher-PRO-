@@ -14,18 +14,19 @@ def show_menu():
     console.print("=" * 60)
 
     items = [
-        "SEO статья",
-        "WordPress",
-        "Telegram",
-        "DTF",
-        "VC.ru",
-        "Medium",
-        "Teletype",
-        "История",
-        "Экспорт",
-        "Проекты",
-        "Настройки",
-    ]
+    "SEO статья",
+    "WordPress",
+    "Telegram",
+    "DTF",
+    "VC.ru",
+    "Medium",
+    "Teletype",
+    "Blogger",
+    "История",
+    "Экспорт",
+    "Проекты",
+    "Настройки",
+]
 
     for i, item in enumerate(items, start=1):
         console.print(f"{i}. {item}")
